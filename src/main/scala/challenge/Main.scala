@@ -34,7 +34,12 @@ object Main {
   }
 
   def runLengthDecode(compressed: String): String = {
-    ???  // TODO: on it :\
+    def doDecode(result: String, lastChar: Option[Char], num: String, txt: List[Char]): String = txt match {
+      case Nil => result + lastChar.getOrElse("").toString * {if (num.nonEmpty) num.toInt else 0}
+      case h :: t if Character.isDigit(h) => doDecode(result, lastChar, num + h, t)
+      case h :: t => doDecode(result + lastChar.getOrElse("").toString * {if (num.nonEmpty) num.toInt else 0}, Some(h), "", t)
+    }
+    doDecode("", compressed.headOption, "", compressed.tail.toList)
   }
 
 
@@ -52,6 +57,9 @@ object Main {
 
     println("runLengthEncode input: ")
     println(runLengthEncode(StdIn.readLine()))
+
+    println("runLengthDecode input: ")
+    println(runLengthDecode(StdIn.readLine()))
   }
 
 }
